@@ -1,0 +1,91 @@
+<html>
+<title>{{html .Room}} - Chat</title>
+<meta name="viewport" content="width=250, user-scalable=no" />
+<style>
+html {
+	-webkit-text-size-adjust: 100%;
+	-ms-text-size-adjust: none;
+}
+body {
+	font-family: sans-serif;
+	background-color:  #000033;
+}
+#heading {
+	font-size: 150%;
+	color: #F0FFF0;
+}
+#in {
+	padding: 4px 0;
+}
+#in input {
+	width: 235px;
+	align-self: center;
+	
+}
+#log div {
+	padding: 4px;
+	color: #FFF5EE;
+}
+#bsubmit{
+	background-color: #228B22; /* Green */
+    border: none;
+    color: white;
+    padding: 6px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    -webkit-transition-duration: 0.4s; /* Safari */
+    transition-duration: 0.4s;
+    cursor: pointer;
+}
+
+</style>
+<body>
+
+<div id="heading">{{html .Room}}</div>
+<div id="in"><input type="text"></div>
+<div><button id="bsubmit" class="sendme">Send</button></div>
+<div id="log"></div>
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.6.2/jquery.min.js"></script>
+<script src="/_ah/channel/jsapi"></script>
+<script>
+$(function() {
+	var room = '{{js .Room}}';
+	var token = '{{js .Token}}';
+
+	var chan = new goog.appengine.Channel(token);
+	var sock = chan.open();
+	sock.onmessage = function(msg) {
+		$("#log").prepend($('<div />').text(msg.data));
+	}
+
+	var $in = $('#in input').focus();
+	var $message = $('#in input').focus();
+
+	$in.keypress(function(e) {
+		if (e.which != 13 && e.which != 10) {
+			return;
+		}
+		e.preventDefault();
+		var msg = $in.val();
+		$in.val('');
+		$.ajax('/post', {data: {room: room, msg: msg}});
+	});
+
+	$('button.sendme').click(function(a){
+			
+			a.preventDefault();
+			var msg2 = $message.val();
+			$message.val('')
+			$.ajax('/post', {data: {room: room, msg: msg2}});
+		})
+
+});
+</script>
+
+</body>
+</html>
