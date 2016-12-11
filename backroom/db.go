@@ -6,7 +6,6 @@ import (
 	"google.golang.org/appengine/channel"
 	"google.golang.org/appengine/datastore"
 	"google.golang.org/appengine/memcache"
-	//"os"
 )
 
 // Rooms are stored in the datastore to be the parent entity of many Clients,
